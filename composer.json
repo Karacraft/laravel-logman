@@ -1,0 +1,25 @@
+{
+    "name": "karacraft/logman",
+    "description": "Simple Model Based Logging",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Karacraft\\Logman\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Karacraft",
+            "email": "kcraftpk@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel":{
+            "providers":[
+                "Karacraft\\Logman\\LogmanServiceProvider"
+            ]
+        }
+    },
+    "require": {}
+}

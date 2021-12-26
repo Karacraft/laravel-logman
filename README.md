@@ -1,0 +1,19 @@
+# Karacraft Logman
+A simple Model Event Logging Package  
+
+
+## Usage
+
+**Installation**  
+
+    composer require karacraft/logman
+    php artisan migrate
+
+    [Info]
+    php artisan vendor:publish --provider="Karacraft\Logman\LogmanServiceProvider" --tag="logman-migrations"
+    php artisan vendor:publish --provider="Karacraft\Logman\LogmanServiceProvider" --tag="logman-traits"
+
+**Setup**  
+Add Trait EventLogger to your models, where you want to start logging  
+
+
