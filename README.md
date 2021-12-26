@@ -4,7 +4,7 @@ A simple Model Event Logging Package
 
 ## Usage
 
-**Installa**  
+**Installation**  
 
     composer require karacraft/logman
 
