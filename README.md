@@ -4,12 +4,16 @@ A simple Model Event Logging Package
 
 ## Usage
 
-**Installation**  
+**Installa**  
 
     composer require karacraft/logman
+
+**Migrate**
+
     php artisan migrate
 
-    [Info]
+**Publish**
+
     php artisan vendor:publish --provider="Karacraft\Logman\LogmanServiceProvider" --tag="logman-migrations"
     php artisan vendor:publish --provider="Karacraft\Logman\LogmanServiceProvider" --tag="logman-traits"
 
