@@ -68,10 +68,10 @@
                         {title:"Action", field:"action" , visible:true ,headerSortStartingDir:"asc" , responsive:0},
                         {title:"Model", field:"table" , visible:true ,headerSortStartingDir:"asc" , responsive:0},
                         {title:"IP", field:"ipaddress" , visible:true ,headerSortStartingDir:"asc" , responsive:0},
-                        {title:"Description", field:"description" , visible:true ,headerSortStartingDir:"asc" , responsive:0},
+                        {title:"Description", field:"description" , visible:true ,headerSort:"false" , responsive:0},
                         {title:"Original", field:"original" , visible:true ,headerSortStartingDir:"asc" , responsive:0},
                         {title:"Changes", field:"changes" , visible:true ,headerSortStartingDir:"asc" , responsive:0},
-                        {title:"User", field:"user_name" , visible:true ,headerSortStartingDir:"asc" , responsive:0},
+                        {title:"User", field:"user.name" , visible:true ,headerSortStartingDir:"asc" , responsive:0},
                      
                     ],
                     // Extra Pagination Data for End Users

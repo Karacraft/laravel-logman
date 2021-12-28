@@ -25,7 +25,7 @@ class LogmanController extends Controller
         $field = $request->sorters[0]["field"];     //  Nested Array
         $dir = $request->sorters[0]["dir"];         //  Nested Array
   
-            $gatepass = EventLogger::where('action','LIKE','%' . $search . '%')
+            $gatepass = EventLogger::with('user:id,name')->where('action','LIKE','%' . $search . '%')
             ->orWhere('table','LIKE','%' . $search . '%')
             ->orWhere('rowid','LIKE','%' . $search . '%')
             ->orWhere('description','LIKE','%' . $search . '%')
@@ -34,6 +34,9 @@ class LogmanController extends Controller
             ->orWhere('user_name','LIKE','%' . $search . '%')
             ->orWhere('original','LIKE','%' . $search . '%')
             ->orWhere('changes','LIKE','%' . $search . '%')
+            ->orWhereHas('user', function($query) use($search){
+                $query->where('name','LIKE',"%$search%");
+            })
             ->orderBy($field,$dir)
             ->paginate((int) $size);
      
