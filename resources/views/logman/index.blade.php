@@ -59,7 +59,7 @@
                     ajaxURL: getDataUrl,
                     //  Init Sorting
                     initialSort:[
-                        {column:"id", dir:"asc"},          //sort by this first
+                        {column:"id", dir:"desc"},          //sort by this first
                     ],
                     // Columns
                     columns:[
