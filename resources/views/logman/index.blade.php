@@ -82,7 +82,7 @@
                         let doc = document.getElementById("example-table-info");
                         doc.classList.add('font-weight-bold');
                         doc.innerText = `Displaying ${response.from} - ${response.to} out of ${remaining} records`;
-                        return response;
+                        return response.data;
                     },
                 });
                 
