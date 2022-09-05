@@ -14,14 +14,23 @@
                     </div>
                     
                     <div class="px-2 py-2">
-                        @include('includes.tabulator_search')
+                        <div class="flex flex-col md:flex-row justify-start  md:justify-between items-start md:items-center pb-2">
+                            {{-- Serach Bar --}}
+                            <div class="flex flex-row relative">
+                                <i class="fa fa-search fa-fw text-indigo-500 absolute top-1 left-1"></i>
+                                <input type="text" class="pl-8 border focus:ring focus:ring-indigo-500 h-8" id="data_filter" onkeyup="dataFilter(this)" placeholder="Search here...">
+                            </div>
+                            <div id="example-table-info" class="mr-2 text-sm text-gray-500"></div>
+                        </div>
+                        
+                        <div id="tableData"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <x-slot name="script">
+    @push('script')
         <script>
             var getDataUrl = @json(route('logman.master'));
             let table;                                              //  The Table
@@ -89,7 +98,6 @@
             }
            
         </script>
+    @endpush
 
-
-    </x-slot>
 </x-app-layout>
