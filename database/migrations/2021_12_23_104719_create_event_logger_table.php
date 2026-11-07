@@ -21,8 +21,8 @@ class CreateEventLoggerTable extends Migration
             $table->text('description');                       //  Row Data before change
             $table->text('original');                       //  Row Data after change
             $table->text('changes');                       //  Row Data after change
-            $table->smallInteger('user_id');                         //  User
-            $table->text('user_name');                         //  User
+            $table->string('user_id')->nullable();                         //  User
+            $table->text('user_name')->nullable();                         //  User
             $table->text('ipaddress');                         //  User
             $table->timestamps();
         });

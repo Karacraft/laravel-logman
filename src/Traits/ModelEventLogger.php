@@ -2,8 +2,8 @@
 
 namespace Karacraft\Logman\Traits;
 
-use Exception;
 use ReflectionClass;
+use Throwable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
 use Karacraft\Logman\Models\EventLogger;
@@ -25,6 +25,7 @@ trait ModelEventLogger
             static::$eventName(function (Model $model) use ($eventName) {
                 try {
                     $reflect = new ReflectionClass($model);
+                    $user = auth()->user();
                     
                     return EventLogger::create([
                         'action'      => static::getActionName($eventName),
@@ -34,11 +35,15 @@ trait ModelEventLogger
                         'original'     => json_encode($model->getOriginal()),
                         'changes'     => json_encode($model->getDirty()),
                         'ipaddress' => static::getUserIpAddr(),
-                        'user_id'     => auth()->user()->id ,
-                        'user_name' => auth()->user()->name,
+                        'user_id'     => $user ? $user->getAuthIdentifier() : null,
+                        'user_name' => $user ? ($user->name ?? null) : null,
                     ]);
-                } catch (Exception $e) {
-                    Log::error($e);
+                } catch (Throwable $e) {
+                    Log::error('Failed to write a model event log.', [
+                        'exception' => $e,
+                        'model' => get_class($model),
+                        'event' => $eventName,
+                    ]);
                 }
             });
         }
