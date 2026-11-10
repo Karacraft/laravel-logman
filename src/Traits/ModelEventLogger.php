@@ -36,7 +36,7 @@ trait ModelEventLogger
                         'changes'     => json_encode($model->getDirty()),
                         'ipaddress' => static::getUserIpAddr(),
                         'user_id'     => $user ? $user->getAuthIdentifier() : null,
-                        'user_name' => $user ? ($user->name ?? null) : null,
+                        'user_name' => static::resolveUserName($user),
                     ]);
                 } catch (Throwable $e) {
                     Log::error('Failed to write a model event log.', [
@@ -61,11 +61,10 @@ trait ModelEventLogger
             return static::$recordEvents;
         }
 
-        return [
-            'created',
-            'updated',
-            'deleted',
-        ];
+        // Fall back to config default
+        $config = config('logman', ['default_record_events' => ['created', 'updated', 'deleted']]);
+        
+        return array_filter($config['default_record_events'], fn ($event) => in_array($event, ['created', 'updated', 'deleted']));
     }
 
     /**
@@ -80,23 +79,57 @@ trait ModelEventLogger
 
     }
 
-    protected static function getUserIpAddr(){
+    protected static function getUserIpAddr()
+    {
+        // First try Laravel's request helper (handles proxies/headers automatically)
+        if ($request = \Illuminate\Support\Facades\Request::instance()) {
+            return $request->ip();
+        }
+
+        // Fallback to raw $_SERVER variables
         $ipaddress = '';
-        if (isset($_SERVER['HTTP_CLIENT_IP']))
-            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        else if(isset($_SERVER['HTTP_X_FORWARDED']))
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
-            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-        else if(isset($_SERVER['HTTP_FORWARDED']))
-            $ipaddress = $_SERVER['HTTP_FORWARDED'];
-        else if(isset($_SERVER['REMOTE_ADDR']))
-            $ipaddress = $_SERVER['REMOTE_ADDR'];
-        else
-            $ipaddress = 'UNKNOWN';
+        
+        foreach ([
+            'HTTP_CLIENT_IP',
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_X_FORWARDED',
+            'HTTP_FORWARDED_FOR',
+            'HTTP_FORWARDED',
+            'REMOTE_ADDR'
+        ] as $header) {
+            if (isset($_SERVER[$header])) {
+                // HTTP_X_FORWARDED_FOR can contain multiple IPs - take the first one
+                $ipaddress = preg_split('/[,;]+/', $_SERVER[$header], 1, 2);
+                return !empty($ipaddress) ? reset($ipaddress) : 'UNKNOWN';
+            }
+        }
+        
+        $ipaddress = 'UNKNOWN';
         return $ipaddress;
+    }
+
+    /**
+     * Resolve the user's display name from configured attribute keys.
+     *
+     * @param \Illuminate\Auth\User|null $user
+     * @return string|null
+     */
+    protected static function resolveUserName($user)
+    {
+        if (!$user) {
+            return null;
+        }
+
+        $attributes = config('logman', ['user_attributes' => ['name', 'email']]);
+
+        foreach ($attributes as $attribute) {
+            if (has_property($user, $attribute)) {
+                $value = getattr($user, $attribute);
+                return is_string($value) && trim($value) !== '' ? $value : null;
+            }
+        }
+
+        return null;
     }
 
 }

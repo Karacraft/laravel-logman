@@ -32,7 +32,7 @@
 
     @push('script')
         <script>
-            var getDataUrl = @json(route('logman.master'));
+            var getDataUrl = @json(route('logman.index'));
             let table;                                              //  The Table
             let searchValue = "";                                   //  The Serach Parameter
             //  Get The Filter Value

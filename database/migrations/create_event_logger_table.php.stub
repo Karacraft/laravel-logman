@@ -17,13 +17,13 @@ class CreateEventLoggerTable extends Migration
             $table->id();                           //  Id of Log
             $table->text('action');                           //  CRUD By User
             $table->text('table');                       //  Table acted upon
-            $table->text('rowid');
+            $table->integer('rowid')->unsigned();              //  Row ID of the model
             $table->text('description');                       //  Row Data before change
-            $table->text('original');                       //  Row Data after change
-            $table->text('changes');                       //  Row Data after change
-            $table->string('user_id')->nullable();                         //  User
-            $table->text('user_name')->nullable();                         //  User
-            $table->text('ipaddress');                         //  User
+            $table->json('original')->nullable();             //  Original model attributes (JSON)
+            $table->json('changes')->nullable();              //  Changed attributes (JSON)
+            $table->string('user_id')->nullable();                         //  User ID
+            $table->text('user_name')->nullable();                         //  User name
+            $table->text('ipaddress');                         //  Client IP address
             $table->timestamps();
         });
     }
