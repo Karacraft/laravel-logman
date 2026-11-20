@@ -25,6 +25,5 @@
         "php": "^8.1",
         "illuminate/support": "^9.0 || ^10.0"
     },
-    "autoload-dev": true,
     "dev-dependencies": {}
 }
